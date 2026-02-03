@@ -1,5 +1,6 @@
 using System.ComponentModel.DataAnnotations;
-using dotnet_webapi_rock_paper_scissors.src.Api.V1.User.Util;
+using dotnet_webapi_rock_paper_scissors.Src.Util;
+using dotnet_webapi_rock_paper_scissors.Src.Api.V1.User.Util;
 
 public sealed class Request
 {
@@ -32,6 +33,17 @@ public static class Register
     {
         user.MapPost("/register", (Request body) =>
         {
+            var ctx = new ValidationContext(body);
+            var results = new List<ValidationResult>();
+
+            if (!Validator.TryValidateObject(body, ctx, results, validateAllProperties: true))
+            {
+                return Results.BadRequest(ApiResponse.Response(
+                    code: 400,
+                    msg: results.First().ErrorMessage ?? "Validation error"
+                ));
+            }
+
             return UtilRegister.MapUtilRegister(
                 name: body.Name,
                 username: body.Username,

@@ -1,6 +1,6 @@
-namespace dotnet_webapi_rock_paper_scissors.src.Api.V1.User.Util;
+namespace dotnet_webapi_rock_paper_scissors.Src.Api.V1.User.Util;
 
-using dotnet_webapi_rock_paper_scissors.src.Util;
+using dotnet_webapi_rock_paper_scissors.Src.Util;
 
 public static class UtilRegister
 {

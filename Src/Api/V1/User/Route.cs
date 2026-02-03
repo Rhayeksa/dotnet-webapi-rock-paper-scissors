@@ -1,4 +1,4 @@
-namespace dotnet_webapi_rock_paper_scissors.src.Api.V1.User;
+namespace dotnet_webapi_rock_paper_scissors.Src.Api.V1.User;
 
 public static class Route
 {
