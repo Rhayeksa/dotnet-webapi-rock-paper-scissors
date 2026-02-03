@@ -1,4 +1,4 @@
-namespace dotnet_webapi_rock_paper_scissors.src.Common;
+namespace dotnet_webapi_rock_paper_scissors.src.Util;
 
 using Microsoft.AspNetCore.WebUtilities;
 
