@@ -9,7 +9,7 @@ public static class Routes
     {
         app.MapGet("/api", () =>
         {
-            return Results.Ok(value: ApiResponse.Response(msg: "Welcome .NET Web API!"));
+            return Results.Ok(value: ApiResponse.Response(msg: "Welcome to API .NET Game Rock Paper Scissor"));
         });
 
         // ---
