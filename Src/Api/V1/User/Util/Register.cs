@@ -21,44 +21,31 @@ public static class UtilRegister
 
             conn = Configs.GetConnection();
             conn.Open();
-            // transaction begin
             tx = conn.BeginTransaction();
 
-            // TODO: insert DB, hashing password, dsb
             // 1) check username exists
-            var cmd = new NpgsqlCommand(
+            using (var cmd = new NpgsqlCommand(
                 $@"
                 SELECT count(1) AS count
                 FROM {Configs.PostgresSchema}.tb_users
                 WHERE deleted_at IS NULL
                 AND username = @username
                 "
-                , conn, tx);
-            cmd.Parameters.AddWithValue("username", username);
-
-            long? dbCount = 0;
-
-            using (var reader = cmd.ExecuteReader())
+                , conn, tx))
             {
-                reader.Read(); // wajib di deklarasi untuk mendapatkan value berdasarkan kolom
-                // var hasRow = reader.Read();
-                dbCount = (long)reader["count"];
-                // Console.WriteLine(dbCount);
-                // Console.WriteLine($">>> reader.Read(): {hasRow}");
-            } // reader dipastikan close/dispose disini
-            if (dbCount > 0)
-                return Results.BadRequest(ApiResponse.Response(400, "username already exist"));
+                cmd.Parameters.AddWithValue("username", username);
+                using var reader = cmd.ExecuteReader();
+                reader.Read();
+
+                if ((long)reader["count"] > 0)
+                    return Results.BadRequest(ApiResponse.Response(400, "username already exist"));
+            }
 
             // 2) INSERT user baru
             var now = DateTime.SpecifyKind(DateTime.Now, DateTimeKind.Unspecified);
-            var userId = Guid.NewGuid(); // atau int dari sequence (tergantung schema kamu)
-            // Console.WriteLine(now);
-            // Console.WriteLine(userId);
-            // var hashedPassword = BCrypt.Net.BCrypt.HashPassword(password); // contoh hashing
-            // var passw = Password.Hash(password);
-            // Console.WriteLine(passw);
+            var userId = Guid.NewGuid();
 
-            using (cmd = new NpgsqlCommand(
+            using (var cmd = new NpgsqlCommand(
                 $@"
                 INSERT INTO {Configs.PostgresSchema}.tb_users(
                     user_id,
