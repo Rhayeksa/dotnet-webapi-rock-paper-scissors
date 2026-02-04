@@ -1,8 +1,8 @@
 namespace dotnet_webapi_rock_paper_scissors.Src.Api.V1.User.Util;
 
+using dotnet_webapi_rock_paper_scissors.src.Configs;
 using dotnet_webapi_rock_paper_scissors.Src.Util;
 using Npgsql;
-using dotnet_webapi_rock_paper_scissors.src.Configs;
 public static class UtilRegister
 {
     public static object MapUtilRegister(
@@ -21,24 +21,14 @@ public static class UtilRegister
 
             conn = Configs.GetConnection();
             conn.Open();
-
-            // 🔥 transaction begin
+            // transaction begin
             tx = conn.BeginTransaction();
+
             // TODO: insert DB, hashing password, dsb
             // 1) check username exists
-
-            // var count = conn.exceute(
-            //     $@"
-            //     SELECT count(1)
-            //     FROM {Configs.PostgresSchema}.tb_users
-            //     WHERE deleted_at IS NULL
-            //     AND username = @username
-            //     ",
-            //     new() { ["username"] = username }
-            // );
             var cmd = new NpgsqlCommand(
                 $@"
-                SELECT role, gender
+                SELECT count(1) AS count
                 FROM {Configs.PostgresSchema}.tb_users
                 WHERE deleted_at IS NULL
                 AND username = @username
@@ -46,31 +36,70 @@ public static class UtilRegister
                 , conn, tx);
             cmd.Parameters.AddWithValue("username", username);
 
-            string? roleDb = null;
-            string? genderDb = null;
+            long? dbCount = 0;
 
             using (var reader = cmd.ExecuteReader())
             {
-                if (!reader.Read())
-                    return Results.BadRequest(ApiResponse.Response(404, "user not found"));
-                roleDb = reader["role"]?.ToString();
-                genderDb = reader["gender"]?.ToString();
+                reader.Read(); // wajib di deklarasi untuk mendapatkan value berdasarkan kolom
+                // var hasRow = reader.Read();
+                dbCount = (long)reader["count"];
+                // Console.WriteLine(dbCount);
+                // Console.WriteLine($">>> reader.Read(): {hasRow}");
             } // reader dipastikan close/dispose disini
+            if (dbCount > 0)
+                return Results.BadRequest(ApiResponse.Response(400, "username already exist"));
 
-            Console.WriteLine($">>> role: {roleDb}");
-            Console.WriteLine($">>> gender: {genderDb}");
+            // 2) INSERT user baru
+            var now = DateTime.SpecifyKind(DateTime.Now, DateTimeKind.Unspecified);
+            var userId = Guid.NewGuid(); // atau int dari sequence (tergantung schema kamu)
+            // Console.WriteLine(now);
+            // Console.WriteLine(userId);
+            // var hashedPassword = BCrypt.Net.BCrypt.HashPassword(password); // contoh hashing
+            // var passw = Password.Hash(password);
+            // Console.WriteLine(passw);
 
-            // ---
+            using (cmd = new NpgsqlCommand(
+                $@"
+                INSERT INTO {Configs.PostgresSchema}.tb_users(
+                    user_id,
+                    created_at,
+                    updated_at,
+                    username,
+                    ""password"",
+                    ""name"",
+                    age,
+                    gender,
+                    role
+                ) VALUES (
+                    @user_id,
+                    @created_at,
+                    @updated_at,
+                    @username,
+                    @password,
+                    @name,
+                    @age,
+                    @gender,
+                    @role
+                )
+                ",
+                conn, tx))
+            {
+                cmd.Parameters.AddWithValue("user_id", userId);
+                cmd.Parameters.AddWithValue("created_at", now);
+                cmd.Parameters.AddWithValue("updated_at", now);
+                cmd.Parameters.AddWithValue("username", username);
+                cmd.Parameters.AddWithValue("password", Password.Hash(password));
+                cmd.Parameters.AddWithValue("name", name);
+                cmd.Parameters.AddWithValue("role", role);
 
-            // result.Read();
-            // // Console.WriteLine($">>> result: {result}");
-            // var a = result["role"];
-            // var b = result["gender"];
-            // Console.WriteLine($">>> a: {a}");
-            // Console.WriteLine($">>> b: {b}");
+                // nullable harus pakai DBNull.Value
+                cmd.Parameters.AddWithValue("age", (object?)age ?? DBNull.Value);
+                cmd.Parameters.AddWithValue("gender", (object?)gender ?? DBNull.Value);
 
-            // if (result["count"] > 0)
-            //     return Results.BadRequest(ApiResponse.Response(400, "username already exists"));
+                var affected = cmd.ExecuteNonQuery();
+                // if (affected != 1)
+                //     throw new Exception("Insert failed: affected rows != 1");
+            }
 
             tx.Commit();
             return Results.Created(
