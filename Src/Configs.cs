@@ -19,4 +19,9 @@ public static class Configs
         => new(
             $"Host={PostgresHost};Port={PostgresPort};Database={PostgresDb};Username={PostgresUsername};Password={PostgresPassword};Pooling=true;Maximum Pool Size=20;"
         );
+
+    // JwtToken
+    public static string JwtSecretKey => Environment.GetEnvironmentVariable("JWT_SECRET_KEY") ?? "";
+    public static string JwtAlgorithm => Environment.GetEnvironmentVariable("JWT_ALGORITHM") ?? "HS256";
+    public static double JwtAccessTokenExpireHours => double.TryParse(Environment.GetEnvironmentVariable("JWT_ACCESS_TOKEN_EXPIRE_HOURS"), out var hours) ? hours : 1;
 }

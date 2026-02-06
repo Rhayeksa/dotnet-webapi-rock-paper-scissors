@@ -8,6 +8,7 @@ public static class Route
 
         // Mapping
         result.MapRegister();
+        result.MapLogin();
 
         return result;
     }
