@@ -6,6 +6,8 @@ var builder = WebApplication.CreateBuilder(args);
 // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
 builder.Services.AddOpenApi();
 builder.Services.AddSwaggerGen(); // swagger
+// builder.Logging.SetMinimumLevel(LogLevel.Debug);
+// builder.Logging.SetMinimumLevel(LogLevel.Information);
 
 var app = builder.Build();
 
