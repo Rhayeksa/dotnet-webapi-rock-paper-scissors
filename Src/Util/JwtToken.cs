@@ -1,10 +1,11 @@
+namespace dotnet_webapi_rock_paper_scissors.Src.Util.JwtToken;
+
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
 using Microsoft.IdentityModel.Tokens;
 using dotnet_webapi_rock_paper_scissors.src.Configs;
-
-namespace dotnet_webapi_rock_paper_scissors.Src.Util;
+using dotnet_webapi_rock_paper_scissors.Src.Util.TimezoneNow;
 
 public static class JwtToken
 {

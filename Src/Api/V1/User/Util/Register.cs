@@ -1,7 +1,7 @@
-namespace dotnet_webapi_rock_paper_scissors.Src.Api.V1.User.Util;
+namespace dotnet_webapi_rock_paper_scissors.Src.Api.V1.User.Util.Register;
 
 using dotnet_webapi_rock_paper_scissors.src.Configs;
-using dotnet_webapi_rock_paper_scissors.Src.Util;
+using dotnet_webapi_rock_paper_scissors.Src.Util.ApiResponse;
 using Npgsql;
 public static class UtilRegister
 {

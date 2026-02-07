@@ -1,5 +1,5 @@
+using dotnet_webapi_rock_paper_scissors.Src.Api.Routes;
 
-using dotnet_webapi_rock_paper_scissors.Src.Api;
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.

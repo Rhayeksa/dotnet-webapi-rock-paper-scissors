@@ -1,4 +1,4 @@
-namespace dotnet_webapi_rock_paper_scissors.Src.Util;
+namespace dotnet_webapi_rock_paper_scissors.Src.Util.ApiResponse;
 
 using Microsoft.AspNetCore.WebUtilities;
 

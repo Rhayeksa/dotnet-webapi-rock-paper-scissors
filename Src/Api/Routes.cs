@@ -1,7 +1,7 @@
-namespace dotnet_webapi_rock_paper_scissors.Src.Api;
+namespace dotnet_webapi_rock_paper_scissors.Src.Api.Routes;
 
-using dotnet_webapi_rock_paper_scissors.Src.Util;
-using dotnet_webapi_rock_paper_scissors.Src.Api.V1.User;
+using dotnet_webapi_rock_paper_scissors.Src.Util.ApiResponse;
+using dotnet_webapi_rock_paper_scissors.Src.Api.V1.User.Route;
 
 public static class Routes
 {
