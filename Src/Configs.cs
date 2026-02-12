@@ -1,4 +1,4 @@
-namespace dotnet_webapi_rock_paper_scissors.src.Configs;
+namespace dotnet_webapi_rock_paper_scissors.Src.Configs;
 
 using Npgsql;
 using DotNetEnv;
