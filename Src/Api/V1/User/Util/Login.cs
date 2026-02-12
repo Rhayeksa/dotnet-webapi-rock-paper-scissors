@@ -1,7 +1,7 @@
 namespace dotnet_webapi_rock_paper_scissors.Src.Api.V1.User.Util.Login;
 
 using Npgsql;
-using dotnet_webapi_rock_paper_scissors.src.Configs;
+using dotnet_webapi_rock_paper_scissors.Src.Configs;
 using dotnet_webapi_rock_paper_scissors.Src.Util.ApiResponse;
 using dotnet_webapi_rock_paper_scissors.Src.Util.JwtToken;
 
