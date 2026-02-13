@@ -9,6 +9,7 @@ public static class GetDetail
 {
     public class ReqUserGetDetail
     {
+        [FromRoute]
         [Required]
         [MinLength(3)]
         public string UserId { get; set; } = "";
