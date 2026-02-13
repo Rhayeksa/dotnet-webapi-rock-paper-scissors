@@ -2,6 +2,7 @@ namespace dotnet_webapi_rock_paper_scissors.Src.Api.Routes;
 
 using dotnet_webapi_rock_paper_scissors.Src.Util.ApiResponse;
 using dotnet_webapi_rock_paper_scissors.Src.Api.V1.User.Route;
+using dotnet_webapi_rock_paper_scissors.Src.Api.V1.Battle.Route;
 
 public static class Routes
 {
@@ -17,8 +18,9 @@ public static class Routes
         // versioned group: /api/v1
         var v1 = app.MapGroup("/api/v1");
 
-        // route
+        // route map
         v1.MapUserRoutes();
+        v1.MapRoutesBattle();
 
         return app;
     }
